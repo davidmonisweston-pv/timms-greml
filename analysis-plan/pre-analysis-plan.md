@@ -188,6 +188,13 @@ Fixed before estimation:
 
 ## 4. Computation
 
+> **Correction pending — see `open-issues.md` BLOCKING-3.** The exactness claim
+> below is wrong as written. Student-level covariates (sex, home resources,
+> language) vary *within* class, so collapsing replaces them with class means,
+> which is a different (ecological) fixed-effects model, and discards the
+> within-class information identifying `σ²_e`. This section must be rewritten
+> before the plan is treated as final.
+
 `A = HKH'` is low rank, so the analysis is done on **precision-weighted class
 means** rather than the `N × N` student matrix. This is not an approximation of
 convenience: it is exact for the class-level component structure, and it turns

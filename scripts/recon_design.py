@@ -44,20 +44,36 @@ def read(prefix: str, iso: str, columns: list[str] | None = None) -> pd.DataFram
     return frame
 
 
+def maths_rows(link: pd.DataFrame) -> pd.DataFrame:
+    """Restrict the linkage file to mathematics teachers.
+
+    The subject variable is IDSUBJ (1 = Mathematics, 2 = Science, 9 = omitted).
+    It is NOT called SUBJECT. Getting this wrong silently mixes science
+    teachers into a mathematics analysis, which inflates teacher counts and
+    makes almost every student look like it has multiple maths teachers, so
+    a missing column is an error rather than a reason to fall back to all rows.
+    """
+    if "IDSUBJ" not in link.columns:
+        raise KeyError(
+            "IDSUBJ not found in the linkage file; refusing to guess which "
+            f"rows are mathematics. Columns present: {sorted(link.columns)[:20]}"
+        )
+    return link[link["IDSUBJ"] == 1]
+
+
 def recon_one(iso: str) -> dict[str, object]:
     """Design summary for a single education system."""
     # The student-teacher linkage file is the only place the student -> class
     # -> teacher mapping exists. IDLINK distinguishes multiple classes taught
     # by the same teacher; IDCLASS is the sampled class.
     link = read("bst", iso)
-    cols = {c.upper(): c for c in link.columns}
+    link.columns = [c.upper() for c in link.columns]
+    cols = {c: c for c in link.columns}
 
     def col(name: str) -> str | None:
         return cols.get(name)
 
-    subject = col("SUBJECT")
-    # SUBJECT==1 is mathematics in the grade-8 linkage file.
-    maths = link[link[subject] == 1] if subject else link
+    maths = maths_rows(link)
 
     idstud, idteach = col("IDSTUD"), col("IDTEACH")
     idclass, idschool = col("IDCLASS"), col("IDSCHOOL")

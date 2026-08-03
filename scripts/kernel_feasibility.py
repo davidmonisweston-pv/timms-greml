@@ -117,11 +117,19 @@ def load_teacher(iso: str) -> pd.DataFrame:
 
 
 def load_link(iso: str) -> pd.DataFrame:
+    """Linkage file, restricted to mathematics teachers.
+
+    The subject variable is IDSUBJ (1 = Mathematics), not SUBJECT. A missing
+    column raises rather than silently falling back to all rows, which would
+    mix science teachers into a mathematics analysis.
+    """
     frame, _ = pyreadstat.read_sav(
         str(DATA_DIR / f"bst{iso}m8.sav"), disable_datetime_conversion=True
     )
     frame.columns = [c.upper() for c in frame.columns]
-    return frame[frame["SUBJECT"] == 1] if "SUBJECT" in frame.columns else frame
+    if "IDSUBJ" not in frame.columns:
+        raise KeyError(f"IDSUBJ missing from bst{iso}m8.sav; refusing to guess")
+    return frame[frame["IDSUBJ"] == 1]
 
 
 def class_level_matrix(
