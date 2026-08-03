@@ -1,0 +1,57 @@
+# ---------------------------------------------------------------------------
+# Data. Nothing under data/ is committed.
+#
+# TIMSS 2023 microdata is redistributed by the IEA under its own terms; this
+# repo ships the code to fetch it, never the data itself. Anyone cloning the
+# repo reruns the download step and gets byte-identical files (checksums are
+# committed under data/checksums/).
+# ---------------------------------------------------------------------------
+data/raw/
+data/interim/
+data/processed/
+data/external/
+!data/checksums/
+!data/**/.gitkeep
+
+# Analysis outputs are regenerated from code; only the report sources are kept.
+outputs/figures/
+outputs/tables/
+outputs/models/
+outputs/logs/
+!outputs/**/.gitkeep
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ---------------------------------------------------------------------------
+# R
+# ---------------------------------------------------------------------------
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+renv/library/
+renv/staging/
+renv/local/
+renv/python/
+renv/sandbox/
+.Rprofile.local
+
+# ---------------------------------------------------------------------------
+# Editors / OS
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
