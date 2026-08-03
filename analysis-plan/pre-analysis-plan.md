@@ -225,10 +225,60 @@ system rather than assumed).
   may have a point mass at the boundary, so pooling is an approximation that
   degrades near zero. Coverage of the exact procedure is therefore established
   by simulation (§7), and pooling is not assumed valid on authority.
-- **Congeniality check:** plausible values are only reliable for associations
-  the TIMSS conditioning model preserved. Whether teacher practice variables
-  entered that model is checked against the Technical Report and reported.
-  If they did not, associations may be attenuated, and this is disclosed.
+### 5.1 The conditioning model — established, not assumed
+
+Checked against TIMSS 2023 Technical Report chapters 11 and 12 (Bezirhan & von
+Davier, 2024) and the published per-country conditioning-variable exhibits.
+
+The conditioning model comprises: principal components of the **student** (and,
+at grade 4, parent) context variables, retained to 90% of variance and capped
+at 5% of the country's unweighted sample size; plus, as *primary* conditioning
+variables, student gender, test language, an optional country-specific
+variable, and **an indicator of the classroom within school, criterion-scaled**
+(i.e. each class ID replaced by that class's mean interim achievement).
+
+Two consequences, in opposite directions:
+
+**(a) Teacher and school questionnaire content is NOT in the conditioning
+model.** Associations between teacher-reported practice and the published
+plausible values are therefore **attenuated toward zero** (Mislevy 1991; Meng
+1994; Rutkowski & Rutkowski 2025). This is the benign direction: it makes the
+estimate conservative. Note that the project now has identified bias in *both*
+directions — confounding inflates, attenuation deflates — and neither is
+claimed to cancel the other.
+
+**(b) Class membership IS in the conditioning model, criterion-scaled.**
+Mislevy's result is that conditioning eliminates attenuation of group
+differences *for grouping variables included in the model*. Since class
+membership is included, between-class variance in the plausible values — the
+`τ²` our estimand is a share of — should be **properly recovered rather than
+attenuated**. Further, because practice is a class-level variable, its
+association with achievement operates through the class mean, which is exactly
+what is conditioned on. The conditioning design therefore protects this
+analysis rather than compromising it.
+
+Claim (b) is favourable to us, so it is **verified rather than asserted**.
+Criterion scaling uses each class's *observed* mean, estimated from ~25
+students, and the direction of any resulting distortion is not obvious a
+priori.
+
+**Verification (`scripts/check_conditioning.py`):** the BSA files contain the
+raw cognitive item responses. Compute the between-class variance share from an
+unconditioned number-correct score and compare it with the PV-based ICC, per
+system.
+
+- Agreement → conditioning is not distorting between-class structure; proceed
+  on plausible values.
+- Divergence → report the magnitude and direction, and treat the PV-based
+  estimate as bounded accordingly.
+
+**Fallback.** TIMSS publishes no EAP/WLE or number-correct score, so raw item
+responses are the only unconditioned achievement measure available. A
+sensitivity analysis repeats the primary model on an analyst-constructed
+unconditioned score built from the raw items and the published IRT parameters
+(Technical Report appendices 12A–12D). Any material disagreement between the PV
+and raw-score results is reported as a limitation on the headline estimate, not
+resolved in favour of whichever is larger.
 - Weights: `TOTWGT` for student-level quantities. Standardisation of `W` and
   kernel construction are recomputed inside each replicate, since they are
   weight-dependent operations. Naively multiplying likelihood contributions by
